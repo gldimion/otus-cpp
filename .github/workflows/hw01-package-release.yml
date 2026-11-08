@@ -1,32 +1,40 @@
-name: 'C++ CI'
+name: 'HW01 - Package and Release'
 
 on:
   push:
     branches:
       - master
+    paths:
+      - 'hw01-package-release/**'
+      - '.github/workflows/hw01-package-release.yml'
 
 jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+    env:
+      HW_DIR: hw01-package-release
+      BUILD_DIR: build/hw01-package-release
+      TAG_PREFIX: hw01
+      PACKAGE_FILE: helloworld-0.0.${{ github.run_number }}-Linux.deb
     steps:
       - uses: actions/checkout@v7
         with:
           submodules: true
       - run: sudo apt-get update && sudo apt-get install libboost-test-dev -y
-      - run: cmake . -DPATCH_VERSION=${{ github.run_number }} -DWITH_BOOST_TEST=ON
-      - run: cmake --build .
-      - run: cmake --build . --target test
-      - run: cmake --build . --target package
+      - run: cmake -S "$HW_DIR" -B "$BUILD_DIR" -DPATCH_VERSION=${{ github.run_number }} -DWITH_BOOST_TEST=ON
+      - run: cmake --build "$BUILD_DIR"
+      - run: cmake --build "$BUILD_DIR" --target test
+      - run: cmake --build "$BUILD_DIR" --target package
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.run_number }}
-          release_name: Release ${{ github.run_number }}
+          tag_name: ${{ env.TAG_PREFIX }}-v${{ github.run_number }}
+          release_name: '${{ github.workflow }} #${{ github.run_number }}'
           draft: false
           prerelease: false
       - name: Upload Release Asset
@@ -36,6 +44,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./helloworld-0.0.${{ github.run_number }}-Linux.deb
-          asset_name: helloworld-0.0.${{ github.run_number }}-Linux.deb
+          asset_path: ./${{ env.BUILD_DIR }}/${{ env.PACKAGE_FILE }}
+          asset_name: ${{ env.PACKAGE_FILE }}
           asset_content_type: application/vnd.debian.binary-package

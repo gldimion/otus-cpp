@@ -4,13 +4,14 @@ on:
   push:
     branches:
       - master
-      - feature/github_actions
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v7
         with:
           submodules: true
       - run: sudo apt-get update && sudo apt-get install libboost-test-dev -y

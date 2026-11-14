@@ -16,14 +16,8 @@ else ()
     add_compile_options(-Wall -Wextra -pedantic -Werror)
 endif()
 
-configure_file(version.h.in version.h)
-
 add_executable(ip_filter ip_filter.cpp)
-add_library(ip_filter_lib lib.cpp)
-
-target_include_directories(ip_filter_lib
-    PRIVATE "${CMAKE_BINARY_DIR}"
-)
+add_library(ip_filter_lib ip.cpp)
 
 target_link_libraries(ip_filter PRIVATE
     ip_filter_lib
@@ -34,12 +28,17 @@ if(WITH_TESTS)
     include(GoogleTest)
     enable_testing()
 
-    add_executable(test_version test_version.cpp)
-    target_link_libraries(test_version PRIVATE
+    add_executable(test_ip test_ip.cpp)
+    target_link_libraries(test_ip PRIVATE
         GTest::gtest_main
         ip_filter_lib
     )
-    gtest_discover_tests(test_version)
+    gtest_discover_tests(test_ip)
+
+    # Reference checksum from the assignment
+    add_test(NAME ip_filter_md5
+        COMMAND sh -c "$<TARGET_FILE:ip_filter> < ${CMAKE_CURRENT_SOURCE_DIR}/ip_filter.tsv | md5sum | grep -q 24e7a7b2270daee89c64d3ca5fb3da1a"
+    )
 endif()
 
 install(TARGETS ip_filter RUNTIME DESTINATION bin)

@@ -13,7 +13,7 @@ add_executable(ip_filter ip_filter.cpp)
 add_library(ip_filter_lib lib.cpp)
 
 set_target_properties(ip_filter ip_filter_lib PROPERTIES
-    CXX_STANDARD 14
+    CXX_STANDARD 17
     CXX_STANDARD_REQUIRED ON
 )
 
@@ -30,7 +30,7 @@ if(WITH_BOOST_TEST)
     add_executable(test_version test_version.cpp)
 
     set_target_properties(test_version PROPERTIES
-        CXX_STANDARD 14
+        CXX_STANDARD 17
         CXX_STANDARD_REQUIRED ON
     )
 

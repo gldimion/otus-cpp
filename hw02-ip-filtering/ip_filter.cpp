@@ -11,10 +11,8 @@
 using IpAddress = std::array<uint8_t, 4>;
 
 std::ostream& operator<<(std::ostream& os, const IpAddress& ip) {
-    return os << static_cast<int>(ip[0]) << '.'
-              << static_cast<int>(ip[1]) << '.'
-              << static_cast<int>(ip[2]) << '.'
-              << static_cast<int>(ip[3]);
+    return os << static_cast<int>(ip[0]) << '.' << static_cast<int>(ip[1]) << '.'
+              << static_cast<int>(ip[2]) << '.' << static_cast<int>(ip[3]);
 }
 
 std::optional<IpAddress> ParseIp(std::string_view str) {

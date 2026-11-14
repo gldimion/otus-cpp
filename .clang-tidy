@@ -1,0 +1,13 @@
+Checks: >
+  -*,
+  bugprone-*,
+  google-*,
+  modernize-*,
+  performance-*,
+  readability-*,
+  -bugprone-easily-swappable-parameters,
+  -modernize-use-trailing-return-type,
+  -readability-identifier-length,
+  -readability-magic-numbers
+HeaderFilterRegex: '.*/hw[0-9][0-9]-[^/]+/[^/]+\.h$'
+FormatStyle: file

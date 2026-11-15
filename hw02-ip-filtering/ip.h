@@ -1,5 +1,6 @@
 #pragma once
 
+#include <algorithm>
 #include <array>
 #include <cstdint>
 #include <optional>
@@ -14,7 +15,19 @@ std::optional<IpAddress> ParseIp(std::string_view str);
 
 void SortIpPoolDescending(std::vector<IpAddress>& pool);
 
-std::vector<IpAddress> FilterByFirstByte(const std::vector<IpAddress>& pool, uint8_t first);
-std::vector<IpAddress> FilterByFirstTwoBytes(const std::vector<IpAddress>& pool, uint8_t first,
-                                             uint8_t second);
+template <typename... Bytes>
+std::vector<IpAddress> FilterByPrefix(const std::vector<IpAddress>& pool, Bytes... bytes) {
+    static_assert(sizeof...(bytes) <= std::tuple_size_v<IpAddress>,
+                  "Too many bytes specified for IP address filtering");
+    const std::array<uint8_t, sizeof...(bytes)> prefix{static_cast<uint8_t>(bytes)...};
+
+    std::vector<IpAddress> result;
+    for (const auto& ip : pool) {
+        if (std::equal(prefix.begin(), prefix.end(), ip.begin())) {
+            result.push_back(ip);
+        }
+    }
+    return result;
+}
+
 std::vector<IpAddress> FilterByAnyByte(const std::vector<IpAddress>& pool, uint8_t byte);

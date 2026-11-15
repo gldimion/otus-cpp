@@ -1,6 +1,5 @@
 #include "ip.h"
 
-#include <algorithm>
 #include <functional>
 
 std::ostream& operator<<(std::ostream& os, const IpAddress& ip) {
@@ -45,27 +44,6 @@ std::optional<IpAddress> ParseIp(std::string_view str) {
 
 void SortIpPoolDescending(std::vector<IpAddress>& pool) {
     std::sort(pool.begin(), pool.end(), std::greater<>());
-}
-
-std::vector<IpAddress> FilterByFirstByte(const std::vector<IpAddress>& pool, uint8_t first) {
-    std::vector<IpAddress> result;
-    for (const auto& ip : pool) {
-        if (ip[0] == first) {
-            result.push_back(ip);
-        }
-    }
-    return result;
-}
-
-std::vector<IpAddress> FilterByFirstTwoBytes(const std::vector<IpAddress>& pool, uint8_t first,
-                                             uint8_t second) {
-    std::vector<IpAddress> result;
-    for (const auto& ip : pool) {
-        if (ip[0] == first && ip[1] == second) {
-            result.push_back(ip);
-        }
-    }
-    return result;
 }
 
 std::vector<IpAddress> FilterByAnyByte(const std::vector<IpAddress>& pool, uint8_t byte) {

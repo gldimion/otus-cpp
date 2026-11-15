@@ -26,16 +26,16 @@ TEST(SortIpPoolDescending, ComparesBytesNumerically) {
     EXPECT_EQ(pool, (std::vector<IpAddress>{{1, 10, 1, 1}, {1, 2, 1, 1}, {1, 1, 1, 1}}));
 }
 
-TEST(FilterByFirstByte, MatchesFirstByteAndKeepsOrder) {
+TEST(FilterByPrefix, MatchesFirstByteAndKeepsOrder) {
     std::vector<IpAddress> pool{{1, 9, 9, 9}, {2, 1, 1, 1}, {1, 1, 1, 1}};
 
-    EXPECT_EQ(FilterByFirstByte(pool, 1), (std::vector<IpAddress>{{1, 9, 9, 9}, {1, 1, 1, 1}}));
+    EXPECT_EQ(FilterByPrefix(pool, 1), (std::vector<IpAddress>{{1, 9, 9, 9}, {1, 1, 1, 1}}));
 }
 
-TEST(FilterByFirstTwoBytes, RequiresBothBytes) {
+TEST(FilterByPrefix, RequiresAllGivenBytes) {
     std::vector<IpAddress> pool{{46, 70, 1, 1}, {46, 71, 1, 1}, {47, 70, 1, 1}};
 
-    EXPECT_EQ(FilterByFirstTwoBytes(pool, 46, 70), (std::vector<IpAddress>{{46, 70, 1, 1}}));
+    EXPECT_EQ(FilterByPrefix(pool, 46, 70), (std::vector<IpAddress>{{46, 70, 1, 1}}));
 }
 
 TEST(FilterByAnyByte, MatchesAnyPosition) {

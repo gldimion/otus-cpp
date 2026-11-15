@@ -25,8 +25,8 @@ int main() {
     SortIpPoolDescending(ip_pool);
 
     PrintIpPool(ip_pool);
-    PrintIpPool(FilterByFirstByte(ip_pool, 1));
-    PrintIpPool(FilterByFirstTwoBytes(ip_pool, 46, 70));
+    PrintIpPool(FilterByPrefix(ip_pool, 1));
+    PrintIpPool(FilterByPrefix(ip_pool, 46, 70));
     PrintIpPool(FilterByAnyByte(ip_pool, 46));
 
     return 0;
